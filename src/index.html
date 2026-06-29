@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>喝了吗水</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="/main.js" defer></script>
+  </head>
+  <body>
+    <div id="app">
+      <!-- 今日进度 -->
+      <div id="progress-bar">
+        <div id="progress-info">
+          <span id="today-label">今日喝水</span>
+          <span id="today-count">0杯</span>
+        </div>
+        <div id="progress-track">
+          <div id="progress-fill"></div>
+        </div>
+      </div>
+
+      <!-- 杯子区域 -->
+      <div id="cup-area">
+        <div id="cup-container">
+          <!-- 杯子 - 恢复扁平结构 -->
+          <div id="cup">
+            <div id="water" style="height: 100%">
+              <div id="water-surface"></div>
+              <div id="water-body"></div>
+            </div>
+          </div>
+
+          <!-- 竖向拖动条 -->
+          <div id="slider-track">
+            <div id="slider-fill"></div>
+            <div id="slider-handle"></div>
+            <div id="slider-percent"></div>
+          </div>
+        </div>
+
+        <!-- 快捷按钮 -->
+        <div id="quick-buttons">
+          <button class="quick-btn" data-level="50">半杯</button>
+          <button class="quick-btn" data-level="30">大半杯</button>
+          <button class="quick-btn" data-level="0">一杯</button>
+        </div>
+
+        <!-- 加水按钮 -->
+        <button id="refill-btn">🫧 加水</button>
+      </div>
+
+      <!-- 今日记录 -->
+      <div id="records">
+        <h3>今日记录</h3>
+        <div id="record-list"></div>
+        <div id="record-actions">
+          <button id="history-btn">📈 近7天趋势</button>
+          <button id="export-btn">📊 导出Excel</button>
+        </div>
+      </div>
+
+      <!-- 历史折线图 -->
+      <div id="history-section" style="display:none">
+        <div id="history-header">
+          <span id="history-title">近7天趋势</span>
+          <span id="history-close" title="收起">✕</span>
+        </div>
+        <div id="history-days">
+          <span class="day-opt active" data-days="7">7天</span>
+          <span class="day-opt" data-days="14">14天</span>
+          <span class="day-opt" data-days="30">30天</span>
+        </div>
+        <canvas id="history-chart"></canvas>
+      </div>
+    </div>
+  </body>
+</html>

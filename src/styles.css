@@ -1,0 +1,491 @@
+@import "tailwindcss";
+
+:root {
+  --water-blue: #7EC8E3;
+  --water-deep: #5B9BD5;
+  --water-light: #C4E4F4;
+  --bg: #F5F7FA;
+  --text: #2C3E50;
+  --text-light: #95A5A6;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: linear-gradient(180deg, #F5F7FA, #EEF2F7);
+  font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+  color: var(--text);
+}
+
+#app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 20px;
+  gap: 20px;
+}
+
+/* ===== 进度条 ===== */
+#progress-bar {
+  width: 100%;
+  max-width: 360px;
+}
+
+#progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+#today-label {
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+#today-count {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--water-deep);
+}
+
+#progress-track {
+  width: 100%;
+  height: 10px;
+  background: #E8ECF1;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+#progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--water-light), var(--water-blue), var(--water-deep));
+  border-radius: 5px;
+  transition: width 0.5s ease;
+}
+
+/* ===== 杯子区域 ===== */
+#cup-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+#cup-container {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+/* ins风玻璃杯 - 单div扁平结构 */
+#cup {
+  width: 120px;
+  height: 186px;
+  position: relative;
+  clip-path: polygon(4% 0%, 96% 0%, 90% 100%, 10% 100%);
+  background: linear-gradient(
+    160deg,
+    rgba(255,255,255,0.08) 0%,
+    rgba(220,230,240,0.03) 40%,
+    rgba(255,255,255,0.12) 60%,
+    rgba(240,245,250,0.04) 100%
+  );
+  border: none;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
+}
+
+/* 杯子内高光 - 用伪元素 */
+#cup::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background:
+    linear-gradient(90deg,
+      transparent 12%,
+      rgba(255,255,255,0.35) 13%,
+      rgba(255,255,255,0.18) 15.5%,
+      rgba(255,255,255,0.08) 17%,
+      transparent 18%
+    ),
+    linear-gradient(90deg,
+      transparent 68%,
+      rgba(255,255,255,0.08) 72%,
+      rgba(255,255,255,0.12) 80%,
+      rgba(255,255,255,0.06) 88%,
+      transparent 92%
+    ),
+    linear-gradient(180deg,
+      rgba(255,255,255,0.15) 0%,
+      transparent 4%
+    );
+}
+
+/* 杯口卷边 - 用伪元素 */
+#cup::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -4px;
+  right: -4px;
+  height: 6px;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  border: 1px solid rgba(180,200,220,0.18);
+  background: rgba(200,215,230,0.08);
+  z-index: 5;
+}
+
+/* 气泡水 */
+#water {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transition: height 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+}
+
+#water-surface {
+  height: 3px;
+  background: linear-gradient(90deg, rgba(126,200,227,0.4), rgba(196,228,244,0.7), rgba(126,200,227,0.4));
+  position: relative;
+  overflow: hidden;
+}
+
+#water-surface::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.4) 15%,
+    transparent 30%
+  );
+  animation: wave 4s linear infinite;
+}
+
+@keyframes wave {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(50%); }
+}
+
+#water-body {
+  flex: 1;
+  background: linear-gradient(180deg, rgba(126,200,227,0.35), rgba(91,155,213,0.45));
+}
+
+/* ===== 拖动条 ===== */
+#slider-track {
+  width: 22px;
+  height: 186px;
+  position: relative;
+  background: #E8ECF1;
+  border-radius: 11px;
+  cursor: pointer;
+  touch-action: none;
+}
+
+#slider-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(196,228,244,0.4), rgba(126,200,227,0.5));
+  border-radius: 11px;
+  transition: height 0.15s ease;
+}
+
+#slider-handle {
+  position: absolute;
+  left: -3px;
+  right: -3px;
+  height: 10px;
+  bottom: calc(100% - 5px);
+  background: white;
+  border: 1.5px solid rgba(91,155,213,0.5);
+  border-radius: 5px;
+  cursor: grab;
+  z-index: 10;
+  transition: bottom 0.15s ease;
+  touch-action: none;
+  box-shadow: 0 1px 4px rgba(91,155,213,0.15);
+}
+
+#slider-handle:active {
+  cursor: grabbing;
+  box-shadow: 0 2px 8px rgba(91,155,213,0.3);
+}
+
+/* 百分比固定在进度条底部 */
+#slider-percent {
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 9px;
+  color: rgba(91,155,213,0.7);
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 11;
+}
+
+#slider-percent.visible {
+  opacity: 1;
+}
+
+/* ===== 快捷按钮 ===== */
+#quick-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.quick-btn {
+  padding: 8px 20px;
+  border: 1.5px solid rgba(126,200,227,0.4);
+  border-radius: 20px;
+  background: white;
+  color: var(--water-deep);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.quick-btn:hover {
+  background: var(--water-light);
+  border-color: var(--water-blue);
+  transform: translateY(-1px);
+}
+
+.quick-btn:active {
+  background: var(--water-blue);
+  color: white;
+  border-color: var(--water-blue);
+}
+
+/* ===== 加水按钮 ===== */
+#refill-btn {
+  padding: 12px 40px;
+  border: none;
+  border-radius: 24px;
+  background: linear-gradient(135deg, var(--water-blue), var(--water-deep));
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 16px rgba(91,155,213,0.25);
+  opacity: 0;
+  pointer-events: none;
+}
+
+#refill-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#refill-btn.visible:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(91,155,213,0.35);
+}
+
+#refill-btn.visible:active {
+  transform: translateY(0);
+}
+
+/* ===== 记录列表 ===== */
+#records {
+  width: 100%;
+  max-width: 360px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+#records h3 {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 8px;
+}
+
+#record-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.record-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: white;
+  border-radius: 8px;
+  font-size: 13px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  gap: 8px;
+  border: 1px solid rgba(220,230,240,0.15);
+  pointer-events: auto;
+}
+
+.record-item .time {
+  color: var(--text-light);
+}
+
+.record-item .amount {
+  font-weight: 600;
+  color: var(--water-deep);
+}
+
+.record-item .del {
+  color: #ccc;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.record-item .del:hover {
+  color: #e53935;
+}
+
+.record-item .del.pressing {
+  color: #e53935;
+  background: rgba(229,57,53,0.1);
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-light);
+  font-size: 13px;
+}
+
+/* 记录区操作按钮 */
+#record-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+#record-actions button {
+  flex: 1;
+  padding: 8px 0;
+  border: 1px solid rgba(126,200,227,0.3);
+  border-radius: 8px;
+  background: white;
+  color: var(--water-deep);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+#record-actions button:hover {
+  background: var(--water-light);
+  border-color: var(--water-blue);
+}
+
+#record-actions button.active {
+  background: var(--water-blue);
+  color: white;
+  border-color: var(--water-deep);
+}
+
+/* 历史图表 */
+#history-section {
+  width: 100%;
+  max-width: 360px;
+}
+
+#history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+#history-title {
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+#history-close {
+  font-size: 16px;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 6px;
+  transition: all 0.2s;
+  line-height: 1;
+}
+
+#history-close:hover {
+  color: var(--water-deep);
+  background: rgba(126,200,227,0.15);
+}
+
+#history-close.pressing {
+  color: #e53935;
+  background: rgba(229,57,53,0.1);
+}
+
+.day-opt {
+  font-size: 12px;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 2px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.day-opt:hover {
+  color: var(--water-deep);
+}
+
+.day-opt.active {
+  background: var(--water-blue);
+  color: white;
+}
+
+#history-days {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+#history-chart {
+  width: 100%;
+  height: 180px;
+}
+
+/* ===== 达标动画 ===== */
+.celebration {
+  animation: celebrate 0.6s ease;
+}
+
+@keyframes celebrate {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
