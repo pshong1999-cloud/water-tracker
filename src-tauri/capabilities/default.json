@@ -8,7 +8,10 @@
     "opener:default",
     "notification:default",
     "dialog:default",
+    "core:path:default",
     "fs:default",
-    "fs:write-files"
+    "fs:allow-appdata-write-recursive",
+    "fs:allow-applocaldata-write-recursive",
+    "fs:allow-home-write-recursive"
   ]
 }
